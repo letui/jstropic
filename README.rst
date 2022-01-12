@@ -1,27 +1,27 @@
-Template
+Jstropic
 ========
 
-$project will solve your problem of where to start with documentation,
-by providing a basic explanation of how to do it easily.
-
-Look how easy it is to use:
-
-    import project
-    # Get your stuff done
-    project.do_stuff()
+Jstropic是什么意思？准确的说应该拆开来这个单词，js代表的是javascript，tropic是回归线，热带的意思。
+Jstropic是一套体积很小的框架，是面向数据库到浏览器的数据处理框架，秉持少就是多的思想来提供强大的能力。
 
 Features
 --------
 
-- Be awesome
-- Make things faster
+- 体积小
+- 简单易用
+- 无需编译
+- 支持热部署
+- 背靠Java强大的开源生态
+- 稳定可靠的JVM提供保障
+- 随意自由扩展
 
 Installation
 ------------
 
-Install $project by running:
+环境准备
 
-    install project
+    JDK1.8+
+
 
 Contribute
 ----------
