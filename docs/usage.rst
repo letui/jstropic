@@ -94,7 +94,7 @@ service的方法，这个方法有两个参数，分别为req何resp（对应req
 在上面的小节中，我们看到一个标准的服务端小程序是一个有service函数的JS变量，这个函数具有两个参数，分别为req和resp。
 当然，实际使用中框架本身不会对这两个参数的命名进行严格控制约束。如果你愿意，你写成service(request,response)也不是不可以。
 但是，这两个变量所对应的就是请求和响应的处理对象。第一个参数负责携带请求相关数据和能力，第二个参数负责携带响应相关数据和能力。
-那么他们的结构优势什么样呢？
+那么他们的结构又是什么样呢？
 
 .. code-block:: javascript
 
@@ -208,4 +208,100 @@ queryPerson的函数只有一个参数，参数名为id，仔细看函数的实�
 进阶之dbutils.js
 ---------------
 框架中的$已经提供了简便的访问数据库的能力，那么dbutils.js又是什么鬼东西呢？不用着急，我们慢慢来看。dbutils本身也是标准化的一个服务端小程序，它作为
-框架一个标准组件而附带，当然开发者是否使用，完全取决于配置。
+框架一个标准组件而附带，当然开发者是否使用，完全取决于配置。接下来，我们先来看一段代码：
+
+.. code-block:: javascript
+
+    {
+    "table":"person",
+    "select":"id,name,address,age,pet_id",
+    "filter":"id > 40 and id !=52",
+    "limit":"0,5",
+    "order":"id desc"
+    }
+
+假设，我们设计了一套低代码化的结构性查询语言，按照上面的代码来进行解读，我们大概能够得出这样的意图。我们要查询的目标表是person，我们要查询的字段
+是id,name,address,age,pet_id，我们要过滤的条件是 id > 40 and id !=52，我们限制数据返回条件是 0,5 （熟悉mysql的朋友很容易就理解），我们要
+排序的字段设置是 id desc。读完以后，作为程序员的朋友应该很清楚这就是一条SQL语句的另一种表达方式了。没错，这就是用JSON的语法来重新定义SQL的能力。
+当然，这个能力肯定是受限制的，不能完全等价于SQL的全部能力。
+
+既然如此，我们的意图是当接收到一个HTTP请求，其携带的Body体是以上数据结构的时候，我们如何才能够以一种以不变应万变的来提供数据库访问能力呢？这就是我们的
+dbutils.js要来解决的事情了。下面，我们来看下dbutils.js的代码：
+
+.. code-block:: javascript
+
+    importPackage(org.apache.commons.dbutils, org.apache.commons.dbutils.handlers, java.sql, java.util, java.time.format)
+    var dbutils = {
+    service: function (req, resp) {
+        try {
+            if (req.body) {
+                var connection = $.jdbc();
+                var run = $.sql();
+                var sql = "select ".concat(req.body.select).concat(" from ").concat(req.body.table).concat(" where ").concat(req.body.filter);
+
+                if(req.body.order){
+                    sql=sql.concat(" order by ").concat(req.body.order);
+                }
+                if(req.body.limit){
+                    sql=sql.concat(" limit ").concat(req.body.limit);
+                }
+                var result = run.query(connection, sql, $.asMapList);
+                resp.body = $.format(result);
+                resp.msg = "OK";
+                resp.code = 200;
+                $.jdbc(connection);
+            }else{
+                resp.code=500;
+                resp.msg="request body is not provided";
+            }
+            return resp;
+        } catch (e) {
+            println(e);
+            resp.msg=e;
+            return resp;
+        }
+    }
+    };
+
+一共有三十多行代码，此时我们仍然可以看到$的身影，是的，此时的dbutils.js就是对之前的访问数据库的另一种高度抽象，添加了些参数校验逻辑，那之前的5个步骤
+一个也没少。我们只需要在config.js中对其进行配置就可以启用强大的数据库服务化能力了。Tropic框架默认会将dbutils.js注册到/@db路径上，@符号有助于和常规
+路径区分开。如果你作为一个开发者不需要这样的通用能力，完全可以取消其在config.js中的注册配置即可。
+
+.. code-block:: javascript
+
+    {path: "/@db", servlet: "./bin/dbutils.js", name: "dbutils"}
+
+以上就是对dbutils.js的建议型配置，喜欢自定义路径的朋友可以根据自己的喜好调整即可，这里就不做测试结果的展示了。
+
+进阶之数据库表服务化
+-----------------
+
+可能有这么一种场景，我们需要将某一张数据库表的数据暴露成http-rest服务，我们的预期要求是，简单，高效，快速，轻量，安全，定制化，热部署。看，这样的要求
+很高了，如何才能够实现呢？如何才能够优雅的实现呢？其实，仔细思考下就明白了，我们完全可以依托dbutils向这些高要求高目标前进，从而达到“低代码能力”。那么，
+接下来我们创建一个服务端小程序，其代码如下:
+
+.. code-block:: javascript
+
+    var db_person = {
+        config:{
+            table: "person",
+            select: "id,name,address",
+            filter: "id > 1 and id !=52"
+        },
+        service: function (req, resp) {
+            load("./bin/dbutils.js");
+            req.body = this.config;
+            return dbutils.service(req, resp);
+        }
+    };
+
+我们来解读下这一份小程序，其db_person对象，拥有一个名为config的属性，这个属性也是个Object结构，并且刚好符合我上一小节当中对Http请求体的JSON格式要求。
+这里就不在过度解读这个config的语义。我们来到service函数内部，仔细看后，会发现只有三行代码。这里出现了一个load函数，这里需要重点说明，这个函数是native函数
+是引擎自带的，其作用就是帮我们加载另一个小程序的代码，加载后，下面的代码就可以直接使用被加载的代码中所有定义的能力。紧接着我们将req.body直接赋值为this.config
+,然后返回dbutils.service调用结果。到此为止，我们发现，这个小程序中没有任何代码对HTTP请求进行处理，只是简单的将数据库以不透明的定制化将其服务出去。并且，其
+service函数中的代码是不需要做任何的改变的，某种意义上来讲，这部分代码就是固化的，是专门针对特定数据库访问做的场景化固化能力范式代码。如果这么理解的话，我们真正的
+对于数据库表服务化的要求就变成了对config属性的设置了。只要能够理解上一小节中对SQL的JSON话语义表达定义，那么我们开发数据库服务化就简直易如反掌。
+
+当然，此时，我们仍然是可以对service函数添加自己的业务逻辑的，无非是写参数校验， 响应结果换一种格式等等。
+
+
