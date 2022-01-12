@@ -5,6 +5,7 @@ Introduce
 Jstropic是一套支持跑在JVM上的Web开发框架，允许开发人员以JS的语法来开发后台程序。这一点有点类似
 NodeJs，但是本质上又不同于NodeJs。
 
+.. code-block:: javascript
 
     var index = {
     service: function(req, resp) {

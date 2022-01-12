@@ -37,6 +37,7 @@ start.bat和start.sh分别是对应Windows和Linux系统的启动脚本。
 --------------
 现在，我们开始编写我们的一个服务端小程序。首先我们要先了解下一份标准的服务端小程序应该是什么样子。
 我们重新回顾下，/bin/index.js的样子：
+.. code-block:: javascript
 
     var index = {
     service: function(req, resp) {
@@ -56,6 +57,8 @@ service的方法，这个方法有两个参数，分别为req何resp（对应req
 
 看上去很简单，对吧？
 我们可以照着它来写另一个我们可以自由发挥的服务端小程序。我们在servlet目录下新建一个test1.js，其内容如下
+.. code-block:: javascript
+
     var test1 = {
     service: function(req, resp) {
             resp.body.append("你看，这是我的第一个服务端小程序。");
@@ -64,9 +67,13 @@ service的方法，这个方法有两个参数，分别为req何resp（对应req
     };
 那么，如何才能让它运行起来呢？我们还要在config.js文件中进行配置这个小程序要服务的Http路径。我们编辑下config.js
 找到:
+.. code-block:: javascript
+
         endpoints: [
             {path: "/", servlet: "./bin/index.js", name: "index"}]
 加入下面一行配置，为我们的请求路径/test1绑定服务端小程序。
+.. code-block:: javascript
+
         {path: "/test1", servlet: "./servlet/test1.js", name: "test1"}
 
 一切完成后，我们启动起来，就可以在访问http://localhost:9999/test1，我们将在浏览器看到我们预期的效果了。
@@ -78,6 +85,8 @@ service的方法，这个方法有两个参数，分别为req何resp（对应req
 当然，实际使用中框架本身不会对这两个参数的命名进行严格控制约束。如果你愿意，你写成service(request,response)也不是不可以。
 但是，这两个变量所对应的就是请求和响应的处理对象。第一个参数负责携带请求相关数据和能力，第二个参数负责携带响应相关数据和能力。
 那么他们的结构优势什么样呢？
+.. code-block:: javascript
+
     request={
         headers:
         method:
@@ -113,6 +122,7 @@ body属性，一般情况下都会处理成JSON对象格式，当请求方法为
 
 在这里，我们假设数据库中已经有了一张表名为person的数据表，表中定义了id,name,age,address,birthday,pet_id这几列。第一步我们要做的是
 把数据库对应的驱动jar包放在lib目录下，同时在config.js文件中进行相关的数据库连接参数配置。一份完整的配置信息应该如下：
+.. code-block:: javascript
 
         db: {
             url: "jdbc:mysql://192.168.10.60:3306/test",
@@ -123,6 +133,7 @@ body属性，一般情况下都会处理成JSON对象格式，当请求方法为
         }
 
 在完成配置后，我们即可开始开发我们的数据库访问小程序了。接着请看示例代码：
+.. code-block:: javascript
 
 importPackage(org.apache.commons.dbutils, org.apache.commons.dbutils.handlers, java.sql, java.util, java.time.format)
 var person = {
@@ -160,8 +171,12 @@ queryPerson的函数只有一个参数，参数名为id，仔细看函数的实�
 
 此处我们没有看到定义Java中的POJO类，直接将数据经过格式化后返回，那么我们如果现在启动后，会看到什么结果呢？
 我们在配置文件中加入路径绑定信息：
+.. code-block:: javascript
+
     {path: "/persons", servlet: "./servlet/person.js", name: "person"}
 启动后，访问http://localhost:9999/persons?id=2。即可看到以下内容：
+.. code-block:: javascript
+
     {"code":200,"msg":"OK","body":[{"id":2,"name":"test","birthday":"2022-03-26 10:34:48"}]}
 
 很明显，这里body的集合中有一条对应了数据库中的数据行的JSON对象数据。并且日期完成了格式化。此时，应该有很多朋友会疑问，这个$到底是个什么东西呢？
