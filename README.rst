@@ -1,4 +1,5 @@
-Jstropic
+========
+Overview
 ========
 
 Jstropic是什么意思？准确的说应该拆开来这个单词，js代表的是javascript，tropic是回归线，热带的意思。
@@ -11,9 +12,9 @@ Features
 - 简单易用
 - 无需编译
 - 支持热部署
-- 背靠Java强大的开源生态
+- 依托Java强大的开源生态
 - 稳定可靠的JVM提供保障
-- 随意自由扩展
+- 可自由扩展
 
 Installation
 ------------
@@ -21,6 +22,7 @@ Installation
 环境准备
 
     JDK1.8+
+    Jstropic
 
 
 Contribute
@@ -33,9 +35,9 @@ Support
 -------
 
 If you are having issues, please let us know.
-We have a mailing list located at: project@google-groups.com
+We have a mailing list located at: letui@qq.com
 
 License
 -------
 
-The project is licensed under the BSD license.
+The project is licensed under the Apache License 2.0

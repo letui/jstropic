@@ -1,6 +1,6 @@
 Authors
 -------
 
-* JackLee
+* JackLee letui@qq.com
 
 
