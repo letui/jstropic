@@ -58,3 +58,65 @@ Advanced
 
 不用为之惊叹，就是这么任性。此时此刻，是不是有点PHP的意思了？原来Java给我们留着这么大的一个惊喜，可是却鲜有人去挖掘。这么爽的特性，显然要比频繁
 重启好使多了。
+
+动态绑定能力
+----------
+动态绑定能力是指允许程序运行期间，动态的将服务端小程序绑定到某个预期的Http-path上来提供服务。我们这里拿之前的hot.js接着举例示范。当然，首先要记得
+在我们的config.js中打开这个黑科技。具体配置如下：
+
+.. code-block:: javascript
+
+    server:{
+        use_dynamic_bind:true,
+        auth_bind_token:"Tropic"
+    }
+
+另外，我们还需要准备一个Http-Client测试工具，比如Postman。一切准备就绪后，我们打开Postman。假设，我们需要另一个/sohot路径提供和/hot同样的能力
+那么此时，我们准备好以下内容：
+
+动态绑定功能的服务地址是 http://localhost:9999/@bind
+
+我们要发送的报文内容是:
+
+.. code-block:: javascript
+
+    {
+    "path":"/sohot",
+    "servlet":"./servlet/hot.js",
+    "name":"hot"
+    }
+
+准备好这些还不够，因为处于安全考虑，我们必须携带token才可以成功请求。token是携带在http请求头里的，其名称为js$auth_bind_token，我们在Postman
+设置js$auth_bind_token对应的值为:Tropic。最后，还有一点需要注意，否则是无法成功的。处于安全考虑，由于POST请求太过普通，所以这个动态绑定的功能
+使用了PUT请求作为准入限制，请一定记得设置HTTP请求方法为PUT。一切都准备好后，我们用Postman发起请求，不出意外将返回以下内容:
+
+.. code-block::javascript
+
+    {
+    "code": 200,
+    "msg": "bind for path: /sohot",
+    "body": ""
+    }
+
+当我们收到这样的返回结果时就代表我们已经绑定成功了，此时，我们访问浏览器地址http://localhost:9999/sohot，将看到以下内容:
+
+.. code-block::javascript
+
+    {"code":200,"msg":"","body":"我喜欢热部署能力。"}
+
+那么如何解绑定呢？
+
+其实解绑定和绑定的动作很相似，地址都是/@bind路径来提供服务，只是解绑定的时候我们需要使用HTTP的DELETE请求方法，请求头里依然要携带令牌，但是
+请求体里可以只携带一个path属性即可。
+
+.. code-block:: javascript
+
+    {
+    "path":"/sohot"
+    }
+
+特别需要注意的是，所有动态绑定的小程序路径，在服务器重启后自动失效。
+
+
+
+

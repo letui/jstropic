@@ -61,5 +61,25 @@ Configuration
 * endpoints
   配置所有需要注册加载的服务端小程序
 
+server
+------
+
+目前针对server的配置项只有四个，分别是port,threads,use_dynamic_bind,auth_bind_token。前面两个相信很多人很容易就理解了，所以就展开介绍
+下后面两个，这两个配置具体来说是Tropic的一个高级功能，当使用了动态绑定能力时，Tropic-Server允许你向一个特殊的路径发起控制请求。这个请求是用来
+实时启用或停用某一个服务端小程序的。这个功能是个很强大的功能，但同时也很危险，所以呢就需要引入一个安全令牌来保障。这就是另外一个auth_bind_token
+的作用。auth_bind_token所配置的令牌内容将作为动态绑定控制请求的安全校验，也就是说发起动态绑定控制请求时，必须携带令牌，这个令牌的内容必须和配置
+的令牌保持一致才可以得以成功处理。
+
+endpoints
+---------
+这个配置项不难理解，这就是所有服务端小程序要注册的地方，大致上类似我们用Spring时的所有Controller的注册。这个配置项是个数组格式，其中每一项都要求
+是标准的Json-Object格式，拥有三个属性，分别是path,servlet,name。
+
+* path 服务端小程序要服务的路径
+* servlet 服务端小程序源代码在服务器上存放的路径，一把建议使用相对路径./servlet/xxx.js，放在Tropic框架的servlet目录下，这里并不限制子级目录
+的使用
+* name 我们的任何一个服务端小程序都是个Javascript变量，Object类型，务必持有一个service(req,resp)格式的函数，返回值是resp。这个name要求就是
+所定义出的变量的名字，这一点就有点类似Spring单例的概念，等同于beanName的意义。
+
 
 

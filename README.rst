@@ -16,13 +16,13 @@ Jstropic是一套体积很小的框架，是面向数据库到浏览器的数据
 - 稳定可靠的JVM提供保障
 - 可自由扩展
 
-安装
+安装使用
 ------------
 
 环境准备
 
-    JDK1.8+
-    Tropic
+* JDK1.8+
+* Tropic
 
 
 Contribute
@@ -34,8 +34,8 @@ Contribute
 Support
 -------
 
-If you are having issues, please let us know.
-We have a mailing list located at: letui@qq.com
+如果你有任何问题，请一定让我们知道.
+邮件地址: letui@qq.com
 
 License
 -------
