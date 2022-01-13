@@ -15,6 +15,7 @@ Contents:
    readme
    usage
    config
+   advanced
    authors
    postscript
 
