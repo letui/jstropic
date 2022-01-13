@@ -16,7 +16,7 @@ Contents:
    usage
    config
    authors
-
+   postscript
 
 
 Indices and tables

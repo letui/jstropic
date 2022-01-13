@@ -2,7 +2,7 @@
 Usage
 ========
 
-Tropic的目录结构
+目录结构
 --------------
 * /bin
 * /lib
@@ -433,3 +433,72 @@ service函数中的代码是不需要做任何的改变的，某种意义上来�
 -----------------
 
 为了方便程序的开发和调试，很多时候需要用到日志框架，在Tropic里，默认是集成了logback作为日志工具框架的。那么，应该如何使用呢？配置文件又在哪里呢？
+之前讲到过整个框架的目录结构，在/log目录下放了一个logback.xml，这个文件中便是默认的日志配置相关信息。
+
+.. code-block:: xml
+
+    <?xml version="1.0" encoding="UTF-8"?>
+    <configuration debug="false">
+        <!--定义日志文件的存储地址 勿在 LogBack 的配置中使用相对路径-->
+        <property name="LOG_HOME" value="./log" />
+        <!-- 控制台输出 -->
+        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            </encoder>
+        </appender>
+        <!-- 按照每天生成日志文件 -->
+        <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+                <!--日志文件输出的文件名-->
+                <FileNamePattern>${LOG_HOME}/Tropic_.%d{yyyy-MM-dd}.log</FileNamePattern>
+                <!--日志文件保留天数-->
+                <MaxHistory>30</MaxHistory>
+            </rollingPolicy>
+            <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern>
+            </encoder>
+            <!--日志文件最大的大小-->
+            <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+                <MaxFileSize>10MB</MaxFileSize>
+            </triggeringPolicy>
+        </appender>
+
+        <!-- 日志输出级别 -->
+        <root level="INFO">
+            <appender-ref ref="STDOUT" />
+            <appender-ref ref="FILE" />
+        </root>
+    </configuration>
+
+当以上配置不能满足实际需要时，开发者完全可以根据自己的实际需要来进行调整。当然，建议开发者将日志的输出存放在/log目录下。日志配置的相关介绍相信
+已经没什么需要交代的了，最多就是日志框架的替换选择。其实，Tropic本身不对框架做任何强制性要求，因为Tropic本身顶层只需要遵循slf4j-api的日志规范即可
+任何一种slf4j-api的实现都可以无缝替换进来，只是简单的把/lib目录里相关的日志jar包进行替换即可，这一点完全可以交给使用者自己定夺。
+
+下面，我们来简单介绍下如何在小程序代码中使用日志功能。我们来看一段小程序代码：
+
+.. code-block:: javascript
+
+    var logtest={
+        service:function(req,resp){
+            var log=$.logger("loggtest");
+            log.info("Hello,this is info-level's text");
+            log.debug("Hello,this is debug-level's text");
+            log.warn("Hello,this is warn-level's text");
+            return resp;
+        }
+    };
+
+.. code-block:: shell
+
+    2022-01-13 14:12:11.971 [pool-1-thread-1] INFO  loggtest - Hello,this is info-level's text
+    2022-01-13 14:12:11.973 [pool-1-thread-1] WARN  loggtest - Hello,this is warn-level's text
+
+不出意外的话，我们的服务端小程序在接收到Http请求后，后台的控制窗口里将出现上面的输入信息。可是为什么没有DEBUG级别的调试日志呢？那是因为我们默认
+配置的日志级别就是INFO级别，如果需要打开DEBUG的日志输出，那就需要自行设置成为DEBUG级别。
+
+值得要说的是，在示例服务端小程序代码中，我们又一次看到了$的身影，我们获取一个日志控制对象使用了$.logger("loggtest");的方法。是的，Tropic将
+获取日志的功能集成了进来，只需要调用$.logger方法就可以，括号中传入的是我们的日志记录器的名字。不过不用担心，即便多次调用传入相同名字，其内部代码
+并不会多次创建，而是会检测命名是否已经存在，如果已经有了那就直接返回，无需创建。这里与JDBC连接不同的是，$.logger方法不用归还。
