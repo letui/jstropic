@@ -13,3 +13,48 @@ Advanced
 * 假如你不想用Tropic来开发Web程序，只想用它来一些控制台小程序，又该如何呢？
 
 我们有这么多假如，那么就来看Tropic是如何做到的吧。
+
+热部署能力
+--------
+无需编译，热部署，总会有无数程序员讨厌编译的繁琐，对着这两大特性垂涎三尺。其实呢，JVM作为一个中间代码解释器，本身就是支持热部署的，有很多字节码
+处理框架完全可以在运行时来改变某个Java类的结构和方法，这一点在面向切面技术领域已经屡试不爽了。由于Tropic本身不使用Java字节码技术，而是简单的
+使用Java的Javascript引擎能力，所以热部署这个能力就浑然天成了。
+
+接下来演示下，热部署的效果。我们创建个服务端小程序hot.js，其内容如下:
+
+.. code-block:: javascript
+
+    //path: /hot
+    var hot = {
+        service: function (req, resp) {
+          resp.body.append("我喜欢简单。");
+          return resp;
+        }
+    };
+
+我们完成配置后，启动服务器，访问http://localhost:9999/hot。将会在浏览器看到：
+
+.. code-block:: javascript
+
+    {"code":200,"msg":"","body":"我喜欢简单。"}
+
+现在，我们将小程序的代码改以下内容:
+
+.. code-block:: javascript
+
+    //path: /hot
+    var hot = {
+        service: function (req, resp) {
+          resp.body.append("我喜欢热部署能力。");
+          return resp;
+        }
+    };
+
+此时，只需要保存以上代码，在不重新启动服务器的同时，我们重新刷新浏览器，我们将在浏览器看到以下内容:
+
+.. code-block:: javascript
+
+    {"code":200,"msg":"","body":"我喜欢热部署能力。"}
+
+不用为之惊叹，就是这么任性。此时此刻，是不是有点PHP的意思了？原来Java给我们留着这么大的一个惊喜，可是却鲜有人去挖掘。这么爽的特性，显然要比频繁
+重启好使多了。
