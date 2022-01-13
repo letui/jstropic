@@ -23,7 +23,8 @@ Jstropic是一套体积很小的框架，是面向数据库到浏览器的数据
 
 * JDK1.8+
 * Tropic
-..    _Tropic-1.0: https://github.com/letui/jstropic/releases/download/untagged-67903ef6046cd688023c/Tropic1.0.zip
+
+.. _Tropic-1.0: https://github.com/letui/jstropic/releases/download/untagged-67903ef6046cd688023c/Tropic1.0.zip
 
 
 
