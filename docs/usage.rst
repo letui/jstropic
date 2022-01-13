@@ -394,3 +394,42 @@ service函数中的代码是不需要做任何的改变的，某种意义上来�
 
 以上就是在config.js中配置redis连接完整信息，可能稍有些不足，比如密码啊，集群啊，等等。目前呢，暂时没有加入这些功能，后续会逐渐完善。
 至于详细的Redis访问API我们就不在这里详细展示了，完全可以参考Jedis的API。另外，这里也就不在做完整的Redis访问能力的服务端小程序的示例代码了。
+
+进阶之JSON序列化工具
+-----------------
+
+目前，业内已经普遍认可JSON语法来表达数据结构，我们很多朋友也会用很多像fastxml-json，gson，fastjson等等一些框架，这些框架功能很强大帮我们省去
+了很多Json序列化和反序列化的工作，我们经常会使用这些框架来完成Entity或者VO之类的序列化要求。但是，其实这都是在Java这种强类型编程语言上的一种
+妥协方案而已。然而，如果我们转移到JS领域，我们会发现一切都变了，我们发现声明式的JSON数据结构可以随时使用，熟练掌握JS的朋友肯定都知道默认JSON.parse
+和JSON.stringify这两个函数。不过，为了统一API风格，简便开发，框架的核心对象$也提供了JSON序列化和反序列化的函数。其分别为$.toJson和$.fromJson;
+这两个函数名，用过谷歌Gson的应该再熟悉不过了。
+
+那么，我们就来不厌其烦的演示下如何使用这两个方法吧。
+
+.. code-block:: javascript
+
+    var input="{\n" +
+        "    \"table\":\"person\",\n" +
+        "    \"select\":\"id,name,address,age,pet_id\",\n" +
+        "    \"filter\":\"id > 40 and id !=52\",\n" +
+        "    \"limit\":\"0,5\",\n" +
+        "    \"order\":\"id desc\"\n" +
+        "}";
+
+    var obj=$.fromJson(input);
+    println(obj.table);
+    obj.table="NPerson";
+    var after=$.toJson(obj);
+    println(after);
+
+不出意外的话我们将在控制台看到两行输出：
+
+.. code-block:: shell
+
+    person
+    {"table":"NPerson","select":"id,name,address,age,pet_id","filter":"id > 40 and id !=52","limit":"0,5","order":"id desc"}
+
+进阶之日志工具
+-----------------
+
+为了方便程序的开发和调试，很多时候需要用到日志框架，在Tropic里，默认是集成了logback作为日志工具框架的。那么，应该如何使用呢？配置文件又在哪里呢？
