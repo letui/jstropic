@@ -205,7 +205,7 @@ queryPerson的函数只有一个参数，参数名为id，仔细看函数的实�
 应该会无比亲切吧，是的，准确的说这个$就是向Jquery的一种致敬，将less is more的内涵发扬光大。需要注意的是，这里对数据库的访问上是集成了连接池的
 能力的，用完记得使用$.jdbc(back_var);将数据库连接还回池中。
 
-进阶之dbutils.js
+进阶之dbutils.js文件
 ---------------
 框架中的$已经提供了简便的访问数据库的能力，那么dbutils.js又是什么鬼东西呢？不用着急，我们慢慢来看。dbutils本身也是标准化的一个服务端小程序，它作为
 框架一个标准组件而附带，当然开发者是否使用，完全取决于配置。接下来，我们先来看一段代码：
@@ -304,4 +304,93 @@ service函数中的代码是不需要做任何的改变的，某种意义上来�
 
 当然，此时，我们仍然是可以对service函数添加自己的业务逻辑的，无非是写参数校验， 响应结果换一种格式等等。
 
+进阶之调用REST服务
+---------------
 
+随着现在很多API设计WEB化，很多微服务暴露出来的接口已经完全是承载JSON数据格式的HTTP服务。那么，这就带来更多的调用HTTP接口的场景，做Java开发的朋友
+肯定很熟悉一些类似Spring-RestTemplate，Apapche-HttpClient，Ok-Http等等开源框架。这里不一一点评各框架的优劣，Tropic框架本身也是希望集成进来
+这种能力，从而方便开发。
+
+既然，要访问Http-rest服务，那么我们可以直接利用之前查询dbutils.js所提供的Http-rest服务。总结下，现在的场景就变成了：我们要提供个Http接口服务，
+这个接口服务的实际实现逻辑是当你请求它的时候，它去请求另一个Http-rest服务，将请求回来的数据经过处理（或者不处理）再次返回浏览器（或者其他Http-Client）。这么
+听上去，有点类似Http代理的意思。是的，本质上我们写WEB程序，大多数是代理了数据库的能力。所以，此时我们就新创建个小程序文件命名为httpproxy.js。
+
+.. code-block:: javascript
+
+    var httpproxy = {
+        config: {
+            table: "person",
+            select: "id,name,address",
+            filter: "id > 50 and id !=52"
+        },
+        service: function (req, resp) {
+            resp = $.post("http://127.0.0.1:9999/@db", null, this.config, true);
+            resp.body.push("Hello!!");
+            return resp;
+        }
+    };
+
+同样，我们仍然需要为这个小程序配置下http路径，我们在config.js的endpoints里加入以下代码:
+
+.. code-block:: javascript
+
+    {path: "/pxy", servlet: "./servlet/httpproxy.js", name: "httpproxy"}
+
+接下来，启动我们的程序。在浏览器里访问http://127.0.0.1:9999/pxy，我们将看到以下结果：
+
+.. code-block:: javascript
+
+{"code":200,"msg":"OK","body":[{"id":50,"name":"P990.6751635416179556","address":"北京市海淀区中关村22号0.8318787196947994"},{"id":51,"name":"P990.6449720409186297","address":"北京市海淀区中关村22号0.7112042891897301"},"Hello!!"]}
+
+以上数据是测试数据，不同使用者并不相同，但是这里我们仔细观察，发现响应结果里面，其中body这个集合中多出来一条字符串数据，内容为"Hello!!"。没错，这一条内容恰恰是我们的代理小程序加进去的。
+其关键的代码就是上文中的resp.body.push("Hello!!");这是一段典型JS数组的操作，就不用再做过多解释。我们把关注点转移到神奇的$上，我们又一次发现了这个$对象，用过Jquery的朋友
+肯定很熟悉Jquery的Ajax请求有两个很常用的$.get和$.post。没错，这里也是同样的API设计，但是稍微有些不同。我们来仔细看下这一行代码：
+
+.. code-block:: javascript
+
+    resp = $.post("http://127.0.0.1:9999/@db", null, this.config, true);
+
+在这一行代码中，post函数总共有四个参数，第一个参数不用解释也很清楚是个Http地址，第二个参数是null，这个可能不太好理解，没关系我们接着看第三个参数，第三个参数是一个JSON-Object，
+同时呢这个对象刚好符合了我们数据库服务化的格式要求，第四个参数是个bool类型的变量，我们这里传入了true。那么让我们解开这里的get和post的庐山真面目吧。
+
+.. code-block:: javascript
+
+    get: function (url, headers, asJson) {
+    }
+
+    post: function (url, headers, data, asJson) {
+    }
+
+看到上面的代码声明时，所有的疑惑都解开了。post函数比get函数多了个数据对象的传入要求，但是这个data并不限定是严格JSON对象，其他类型也是可以的，因为无论如何它都要被
+塞进Http请求报文体当中。后面的asJson是说响应回来的结果要不要完成JSON反序列化，使其成为一个JSON对象。至此，我想各位朋友应该没有疑问了。我们可以这样简单的使用
+框架自带的能力来完成Http请求，并且是如此少的代码。
+
+进阶之访问Redis
+---------------
+
+考虑到大家在实际开发中，很大部分场景是要使用Redis的，所以框架本身也将Redis的访问能力集成了进来，当然只是集成，其依赖的核心jar包是我们熟知的Jedis。那么我们来看下，
+如何访问Redis吧。
+
+.. code-block:: javascript
+
+    var redis = $.redis();
+    redis.set("Hi","I'm Tropic");
+    redis.get("Hi");
+    $.redis(redis);
+
+相信看了上面的代码，所有的朋友应该很容易理解了。这里的$.redis();采用了和$.jdbc();同样的设计，如果你调用函数没有传递任何参数那么就是获取一个Jedis对象，
+当你用完了以后，你需要把它还回去，使用方式就是同样的$.redis(back);这里传入刚才的返回值就可以了。细心的朋友可能会疑惑，那么我们的Redis要如何配置呢？
+是的，我们当然需要完成初始化配置。我们来看下Redis的连接配置长什么样子。
+
+.. code-block:: javascript
+
+        redis:{
+          host:"192.168.10.173",
+          port:6379,
+          maxIdle:10,
+          maxTotal:20,
+          maxTimeout:2000
+        }
+
+以上就是在config.js中配置redis连接完整信息，可能稍有些不足，比如密码啊，集群啊，等等。目前呢，暂时没有加入这些功能，后续会逐渐完善。
+至于详细的Redis访问API我们就不在这里详细展示了，完全可以参考Jedis的API。另外，这里也就不在做完整的Redis访问能力的服务端小程序的示例代码了。
