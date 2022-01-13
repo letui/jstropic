@@ -24,7 +24,7 @@ NodeJs，但是本质上又不同于NodeJs。
 
 .. code-block:: javascript
 
-{"code":200,"msg":"Version:1.0","body":"Hello!! Welcome to Tropic engine."}
+    {"code":200,"msg":"Version:1.0","body":"Hello!! Welcome to Tropic engine."}
 
 框架本身并不预期解决所有用Java语言来开发程序的能力，但是提供了一种无需编译即可运行的能力，这一点不同OSGI技术，更加不同于JSP技术。准确的说运行JS
 的能力本身就是JVM自带的特性之一，本框架只是稍微往前走了那么一小步，使其更容易开发一些小微服务，动态灵活热部署，同时呢又可以完全拥抱强大的Java开源
