@@ -12,7 +12,11 @@ Contents:
    :maxdepth: 2
    :glob:
 
-   *
+   intro
+   readme
+   usage
+   config
+   authors
 
 
 
