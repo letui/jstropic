@@ -31,8 +31,10 @@ Jstropic是一套体积很小的框架，是面向数据库到浏览器的数据
 Contribute
 ----------
 
-- Issue Tracker: github.com/$project/$project/issues
-- Source Code: github.com/$project/$project
+- Issue Tracker: http://github.com/letui/Tropic/issues
+- Source Code: http://github.com/letui/Tropic
+- Home Page: http://tropic.readthedocs.io/
+
 
 Support
 -------
