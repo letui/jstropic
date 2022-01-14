@@ -218,6 +218,66 @@ Advanced
 这是个问题，没有答案，没有标准，只有适合不适合，我们完全可以根据自己的实际情况来做出开发规范。
 
 
+关于三层架构
+----------
+以往，我们用Spring开发JavaWeb应用，基本上清一色的Controller->Service->Dao。那么用Tropic开发，还需要吗？其实，这里完全可以沿用之前的分层架构去写代码。
+
+* Controller
+
+.. code-block:: javascript
+
+    var person_ctrl={
+      service:function (req,resp){
+          println($.toJson(resp));
+          load("./servlet/demo/person_service.js");
+          if(req.params){
+              var id=req.params.get("id");
+              if(id==null){
+                  resp.code=500;
+                  resp.msg.append("id不可以为null");
+              }else{
+                 var rst= person_service.queryOneById(id);
+                 resp.body=rst;
+              }
+              return resp;
+          }else{
+              resp.code=500;
+              resp.msg.append("请携带id参数查询");
+              return resp;
+          }
+      }
+    };
+
+* Service
+
+.. code-block:: javascript
+
+    var person_service = {
+        queryOneById: function (id) {
+            load("./servlet/demo/person_dao.js");
+            var sql="select * from person where id = "+id;
+            var rst=person_dao.query(sql);
+            return rst;
+        }
+    };
+
+* DAO
+
+.. code-block:: javascript
+
+    var person_dao = {
+        query: function (sql) {
+            var conn=$.jdbc();
+            var rn=$.sql();
+            var obj=rn.query(conn,sql,$.asMapList);
+            obj=$.format(obj);
+            $.jdbc(conn);
+            return obj;
+        }
+    };
+
+上面我们展示了三层架构的方式来写代码，当然这些示例代码都很简陋。不过，我们需要注意load方法，这个方法是将我们三个代码源文件串起来的函数，由于我们
+每个源文件都是声明式的对象变量，所以我们想使用就需要加载进来。另外，必须要从应用的根级目录来进行加载./就是指当前的框架home目录。
 
 
 
