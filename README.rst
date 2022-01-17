@@ -26,8 +26,7 @@ Jstropic是一套体积很小的框架，是面向数据库到浏览器的数据
 
 抢先版下载地址:
 
-https://github.com/letui/jstropic/releases/download/untagged-67903ef6046cd688023c/Tropic1.0.zip
-
+https://github.com/letui/Tropic/releases/download/untagged-1d9b5dea0e3a23e9373f/Tropic-1.0.zip
 
 
 Contribute
