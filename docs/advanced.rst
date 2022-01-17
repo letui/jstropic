@@ -280,4 +280,21 @@ Advanced
 每个源文件都是声明式的对象变量，所以我们想使用就需要加载进来。另外，必须要从应用的根级目录来进行加载./就是指当前的框架home目录。
 
 
+setInterval和setTimeout
+----------------------------
+
+通常，我们在JS代码中用到定时刷新，或者延迟执行的场景是，我们会用到这两个函数。在Tropic里，也同样做了支持。
+
+.. code-block:: javascript
+
+    $.setInterval(function(){
+        println("Hello ,i'm in 'Interval'");
+    },2000);
+
+    $.setTimeout(function(){
+        println("Hello ,i'm in 'Timeout'");
+    },2000);
+
+以上代码已经清楚的展示了，这两个函数的使用方法，相信不用再啰嗦解释了。
+
 
