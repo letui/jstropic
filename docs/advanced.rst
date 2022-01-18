@@ -297,4 +297,57 @@ setInterval和setTimeout
 
 以上代码已经清楚的展示了，这两个函数的使用方法，相信不用再啰嗦解释了。
 
+访问MongoDB
+----------
+
+MongoDB是业内比较知名的NoSQL数据库，这里不做点评，只展示如何集成MongoDB并完成数据操作等等。老规矩，上代码:
+
+.. code-block:: javascript
+
+    var mongo_servlet = {
+    service: function (req, resp) {
+        var db = $.mongo("local");
+        var iter = db.listCollectionNames().iterator();
+        var respCols = [];
+        while (iter.hasNext()) {
+            respCols.push(iter.next());
+        }
+        var cols = $.mongo("local", "test");
+        cols.insertOne($.asDoc({name: "王逊", age: 29}));
+        iter = cols.find($.asDoc({age: {$gt: 20}})).iterator();
+        var rows = [];
+        while (iter.hasNext()) {
+            rows.push($.fromJson(iter.next().toJson()));
+        }
+        resp.body = {cols: respCols, rowsInTest: rows};
+
+        return resp;
+
+    }
+    }
+
+是的，我们为了方便观察，还是写一个Servlet更合适不过，在上面的代码中万能的$再次出现了。这次是$.mongo();这个函数允许使用者传两个参数，第一个
+是databaseName第二个是，位于第一个databaseName下的CollectionName。上面代码的大意是，获取一个指定的database，并遍历出其下的所有Collection
+Name，获取一个名为test的Collection，完成一次数据插入，并完成一次数据查询，其查询条件是age > 20（这里用了mongoDB专用的查询语法），根据查询出
+的结果遍历并组装成响应结果。
+
+这里必须点出三个Java类:
+* com.mongodb.client.MongoDatabase
+* com.mongodb.client.MongoCollection
+* org.bson.Document
+
+准确的说，MongoDB的交互是依靠org.bson.Document的，其查询的输入和输出都是这个Document来承载。也就是说，如果想对database进行操作，请查阅
+MongoDatabase的API即可，如果想对Collection进行操作，查阅MongoCollection的API即可。另外，值得注意的是，在查询出的Document进行遍历是使用
+一次toJson,又使用了一次fromJson。这里第一次toJson只是Document的内部格式化为JSON字符串的方法，但是如果我们要使用Javascript中JsonObject来
+操作就需要$.fromJson函数将其转化为JS-Object。
+
+那么，MongoDB在配置文件中又该如何配置呢?
+
+.. code-block:: javascript
+
+    mongo:{
+            uri:"mongodb://localhost:27017/?maxPoolSize=20&w=majority"
+        }
+
+加入以上代码在配置config中即可，至于这个uri的更多细节，还请移步至mongodb的官网。
 
