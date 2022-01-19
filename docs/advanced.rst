@@ -351,3 +351,31 @@ MongoDatabase的API即可，如果想对Collection进行操作，查阅MongoColl
 
 加入以上代码在配置config中即可，至于这个uri的更多细节，还请移步至mongodb的官网。
 
+访问neo4j
+----------
+
+Neo4j作为数据分析领域的专业图算法数据库的领导者，备受推崇。自然，加入访问Neo4j的支持也是必须的。
+
+.. code-block:: javascript
+
+    var neo4j_servlet = {
+        service: function (req, resp) {
+            var session = $.neo4j(true);
+            var rst = session.run("MATCH (n:Tag) RETURN n LIMIT 25");
+            var respArray = [];
+            while (rst.hasNext()) {
+                var row = rst.next().get("n");
+                var obj = {
+                    name: row.get("name").asString()
+                    , level: row.get("value").asString()
+                };
+                respArray.push(obj);
+            }
+            resp.body = respArray;
+            return resp;
+        }
+    }
+
+同样，还是作为Servlet小程序奉上，$.neo4j这个函数允许你传入一个参数，在实际使用中如果传入true则返回Neof4j的API中提供的Session，如果不传则返回
+Driver。后面的代码则是Neo4j的Cypher语言。当我们得到一个结果集后就可以遍历按照数据结构进行组织处理。这个rst.next().get("n")当中的"n"代表的是
+Cypher语句中 RETURN n 里的 n。后面的每一行数据row.get("xxx")则是对应的节点数据的属性名，类似一个Map。
