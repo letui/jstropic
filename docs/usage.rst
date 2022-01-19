@@ -524,4 +524,20 @@ service函数中的代码是不需要做任何的改变的，某种意义上来�
         static_resource: [".js", ".css", ".html", ".png"]
     }
 
-开启了静态资源服务的配置，应该是上面这样。数组里是开放了的文件类型后缀，不在这个数组里配置的文件类型后缀是不被允许访问的。
+开启了静态资源服务的配置，应该是上面这样。数组里是开放了的文件类型后缀，不在这个数组里配置的文件类型后缀是不被允许访问的。在/static目录下有个默认的
+index.html，其代码如下:
+
+.. code-block:: html
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Tropic</title>
+    </head>
+    <body>
+    <h1>Hello,I'm the static resource in folder "static"</h1>
+    </body>
+    </html>
+
+在我们启动好后，访问地址:http://localhost:9999/index.html 就可以看到html标题内容了，此时你就拥有了一个静态资源Http服务器。
