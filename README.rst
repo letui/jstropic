@@ -21,12 +21,12 @@ Jstropic是一套体积很小的框架，是面向数据库到浏览器的数据
 
 环境准备
 
-* JDK1.8+
+* JDK8/11
 * Tropic
 
 抢先版下载地址:
 
-https://github.com/letui/Tropic/releases/download/untagged-1d9b5dea0e3a23e9373f/Tropic-1.0.zip
+https://github.com/letui/Tropic/releases/download/Tropic-1.1/Tropic-1.1.zip
 
 
 Contribute

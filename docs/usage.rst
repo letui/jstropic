@@ -9,6 +9,7 @@ Usage
 * /log
 * /patch
 * /servlet
+* /static
 * app.js
 * config.js
 * start.bat
@@ -20,6 +21,7 @@ Usage
 * /bin/dbutils.js
 * /bin/server.js
 * /bin/index.js
+* /bin/static.js
 
 这四个文件中server.js是框架的核心，index.js是框架的默认首页响应程序脚本，等同于index.html/index.jsp之类
 dbutils.js是对数据库服务化的一种模板化能力的提炼，将数据库访问SQL能力换成另一种语法。
@@ -27,8 +29,9 @@ bind.js是整个框架的一种动态绑定能力模块，在后面的章节中�
 
 /lib目录存放我们所需要的jar包，这些jar包将在程序启动时加载至JVM中。
 /log目录是我们存放程序运行时日志的目录，所有程序产生的日志将会写入到该目录下。
-/patch目录是bing.js所提供的能力向服务器打补丁时所提交的代码所存放的目录
-/servlet目录是我们所有开发的小程序的存放目录
+/patch目录是bing.js所提供的能力向服务器打补丁时所提交的代码所存放的目录。
+/servlet目录是我们所有开发的小程序的存放目录。
+/static 目录是我们存放静态资源的目录，例如html,js,css,图片等等。
 app.js 是程序的主启动程序，相当于main函数。
 config.js 是我们程序的集中配置文件，所有的配置信息将在这个配置文件中进行分类配置。
 start.bat和start.sh分别是对应Windows和Linux系统的启动脚本。
@@ -502,3 +505,23 @@ service函数中的代码是不需要做任何的改变的，某种意义上来�
 值得要说的是，在示例服务端小程序代码中，我们又一次看到了$的身影，我们获取一个日志控制对象使用了$.logger("loggtest");的方法。是的，Tropic将
 获取日志的功能集成了进来，只需要调用$.logger方法就可以，括号中传入的是我们的日志记录器的名字。不过不用担心，即便多次调用传入相同名字，其内部代码
 并不会多次创建，而是会检测命名是否已经存在，如果已经有了那就直接返回，无需创建。这里与JDBC连接不同的是，$.logger方法不用归还。
+
+进阶之静态资源
+-----------
+
+作为一个Web开发框架，很多开发者肯定会希望有静态资源的服务能力，比如JS、CSS、HTML和图片等等。Tropic框架也支持服务静态资源，那么要如何打开这个功能呢？
+还记得之前的配置文件里server属性，在其子级加一个叫做static_resource的属性，其值是一个数组，数组中包含了认为是静态文件的后缀，当有这些后缀的HTTP请求就
+会当做是静态资源来处理，这些对应的文件都放在/static目录下。如果还记得目录结构的话，在/bin目录下有个static.js，没错就是这个js脚本来处理静态资源的访问
+，它会根据请求路径映射在/static目录下去寻找，当找不到时就会返回404错误。
+
+.. code-block:: javascript
+
+    server: {
+        port: 9999,
+        threads: 200,
+        use_dynamic_bind: true,
+        auth_bind_token: "Tropic",
+        static_resource: [".js", ".css", ".html", ".png"]
+    }
+
+开启了静态资源服务的配置，应该是上面这样。数组里是开放了的文件类型后缀，不在这个数组里配置的文件类型后缀是不被允许访问的。
