@@ -378,4 +378,13 @@ Neo4j作为数据分析领域的专业图算法数据库的领导者，备受推
 
 同样，还是作为Servlet小程序奉上，$.neo4j这个函数允许你传入一个参数，在实际使用中如果传入true则返回Neof4j的API中提供的Session，如果不传则返回
 Driver。后面的代码则是Neo4j的Cypher语言。当我们得到一个结果集后就可以遍历按照数据结构进行组织处理。这个rst.next().get("n")当中的"n"代表的是
-Cypher语句中 RETURN n 里的 n。后面的每一行数据row.get("xxx")则是对应的节点数据的属性名，类似一个Map。
+Cypher语句中 RETURN n 里的 n。后面的每一行数据row.get("xxx")则是对应的节点数据的属性名，类似一个Map。那么，配置信息长什么样呢？
+
+.. codo-block:: javascript
+
+    neo4j:{
+        uri:"bolt://127.0.0.1:7687/neo4j",
+        user:"neo4j",
+        password:"123qwe123"
+    }
+
