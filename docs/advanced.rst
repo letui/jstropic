@@ -351,7 +351,7 @@ MongoDatabase的API即可，如果想对Collection进行操作，查阅MongoColl
 
 加入以上代码在配置config中即可，至于这个uri的更多细节，还请移步至mongodb的官网。
 
-访问neo4j
+访问Neo4j
 ----------
 
 Neo4j作为数据分析领域的专业图算法数据库的领导者，备受推崇。自然，加入访问Neo4j的支持也是必须的。
@@ -387,4 +387,34 @@ Cypher语句中 RETURN n 里的 n。后面的每一行数据row.get("xxx")则是
         user:"neo4j",
         password:"123qwe123"
     }
+
+使用过滤器
+--------
+
+做过Java Web开发的朋友肯定都知道过滤器的存在，当我们想要对某些路径整体进行处理的时候会用到过滤器，比如检查用户是否登录，字符编码统一设置等等。
+Tropic框架也同样支持过滤器，在框架中过滤器采用前缀匹配过滤，不支持正则或者后缀过滤。同样，过滤器作为一种服务端小程序，本质上和servlet没有区别
+所以在配置上也并没有什么不同，只不过过滤器应该配置在config.filters下，而servlet配置在config.endpoints下。与servlet配置相同的是都需要有
+path,servlet,name三个属性的配置。一个典型的filters配置应该如下:
+
+.. code-block:: javascript
+
+    filters: [
+            {path: "/", servlet: "./filter/corefilter.js", name: "corefilter"}
+    ]
+
+看了上面的配置，会发现filters的配置的确和servlet没有什么不同，但值得注意的是进行servlet属性配置的时候，示例中用了./filter目录而非servlet目录
+框架本身建议将servlet和filter分开放置。
+
+那么除了配置相同以外，又该如何编写一个过滤器呢？
+
+.. code-block:: javascript
+
+    var corefilter={
+        service:function(req,resp){
+            $.logger().info(req.uri);
+        }
+    }
+
+上面的代码展示了一个过滤器的代码，这个过滤器会对每个请求的path进行打印。同样，看到了完整的filter代码，其开发上和servlet也没有什么不同，如果非要
+说不同，那么可能是没有return resp;这一行代码。其实在servlet中也不强制要求return resp;。
 
