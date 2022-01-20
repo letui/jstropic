@@ -418,3 +418,29 @@ path,servlet,name三个属性的配置。一个典型的filters配置应该如�
 上面的代码展示了一个过滤器的代码，这个过滤器会对每个请求的path进行打印。同样，看到了完整的filter代码，其开发上和servlet也没有什么不同，如果非要
 说不同，那么可能是没有return resp;这一行代码。其实在servlet中也不强制要求return resp;。
 
+servlet和filter的另一种写法
+-------------------------
+
+常规写法是var xxx={service:function(req,resp){  }};顾名思义，就是要声明一个包含了service函数的对象。如果你不喜欢这种对象声明式的写法，那么
+我们来看看另一种写法：
+
+.. code-block:: javascript
+
+    $.servlet("hot",function(req,resp){
+        resp.body.append("我喜欢热部署能力。");
+        return resp;
+    });
+
+这种写法等同于:
+
+.. code-block:: javascript
+
+    var hot = {
+     service: function (req, resp) {
+       resp.body.append("我喜欢热部署能力。");
+       return resp;
+     }
+    };
+
+但是，显然第二种允许在对象上定义出更多的属性或者其他方法。第一种只适合比较简单的单一服务处理方法，另外如果想用另一方是写过滤器，只需要$.filter(name,function)。
+同样的方式即可。
