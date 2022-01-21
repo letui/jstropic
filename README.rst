@@ -1,5 +1,5 @@
 ========
-Overview
+综述
 ========
 
 Jstropic是什么意思？准确的说应该拆开来这个单词，js代表的是javascript，tropic是回归线，热带的意思。
@@ -28,7 +28,7 @@ Jstropic是一套体积很小的框架，是面向数据库到浏览器的数据
 
 https://github.com/letui/Tropic/releases/download/Tropic-1.2/Tropic-1.2.zip
 
-Contribute
+加入贡献
 ----------
 
 - Issue Tracker: http://github.com/letui/Tropic/issues
@@ -36,13 +36,13 @@ Contribute
 - Home Page: http://tropic.readthedocs.io/
 
 
-Support
+支持
 -------
 
 如果你有任何问题，请一定让我们知道.
 邮件地址: letui@qq.com
 
-License
+授权
 -------
 
 The project is licensed under the Apache License 2.0
