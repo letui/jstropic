@@ -33,7 +33,7 @@ https://github.com/letui/Tropic/releases/download/Tropic-1.2/Tropic-1.2.zip
 
 - Issue Tracker: http://github.com/letui/Tropic/issues
 - Source Code: http://github.com/letui/Tropic
-- Home Page: http://tropic.readthedocs.io/
+- Home Page: http://jstr.cc/
 
 
 支持
