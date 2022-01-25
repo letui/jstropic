@@ -9,13 +9,29 @@ Jstropic's documentation!
 Contents:
 
 .. toctree::
+   :caption: Introduce
    :maxdepth: 3
 
    intro
    readme
+
+.. toctree::
+   :caption: How to use it
+   :maxdepth: 3
+
    usage
    config
+
+.. toctree::
+   :caption: Advanced topics
+   :maxdepth: 3
+
    advanced
+
+.. toctree::
+   :caption: Others
+   :maxdepth: 3
+
    authors
    postscript
 
