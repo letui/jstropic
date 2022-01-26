@@ -35,6 +35,7 @@ Contents:
    authors
    postscript
    ss
+   zx
 
 
 
