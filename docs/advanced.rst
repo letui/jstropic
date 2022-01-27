@@ -497,7 +497,7 @@ Tropic提供了生成CRUD代码的能力组件，如此一来，我们可以快�
 
 我们来到app.js文件内容中，默认如下：
 
-.. code-block::javascript
+.. code-block:: javascript
 
     load("nashorn:mozilla_compat.js");
     load("./config.js");
@@ -506,7 +506,7 @@ Tropic提供了生成CRUD代码的能力组件，如此一来，我们可以快�
 
 当然，按照之前章节里介绍到的配置，我们还需要事先配置好数据库的连接信息。接着，我们在将上面的代码改成以下：
 
-.. code-block::javascript
+.. code-block:: javascript
 
     load("nashorn:mozilla_compat.js");
     load("./config.js");

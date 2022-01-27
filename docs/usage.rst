@@ -441,7 +441,7 @@ JSON序列化工具
     {"table":"NPerson","select":"id,name,address,age,pet_id","filter":"id > 40 and id !=52","limit":"0,5","order":"id desc"}
 
 ============
-日志工具
+使用日志工具
 ============
 
 为了方便程序的开发和调试，很多时候需要用到日志框架，在Tropic里，默认是集成了logback作为日志工具框架的。那么，应该如何使用呢？配置文件又在哪里呢？
