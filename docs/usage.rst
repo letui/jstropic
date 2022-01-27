@@ -12,6 +12,8 @@
 * config.js
 * start.bat
 * start.sh
+* stop.bat
+* stop.sh
 
 在/bin目录下有四个文件：
 
@@ -34,7 +36,7 @@ bind.js是整个框架的一种动态绑定能力模块，在后面的章节中�
 app.js 是程序的主启动程序，相当于main函数。
 config.js 是我们程序的集中配置文件，所有的配置信息将在这个配置文件中进行分类配置。
 start.bat和start.sh分别是对应Windows和Linux系统的启动脚本。
-stop.stop.sh分别是对应Windows和Linux系统的停止脚本。
+stop.bat和.stop.sh分别是对应Windows和Linux系统的停止脚本。
 
 
 ========
