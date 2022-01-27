@@ -486,3 +486,40 @@ Servlet和Filter的另一种写法
 
 一切配置完毕以后，我们重新启动服务，当再次在地址栏键入地址的时候，就需要完整的写https://127.0.0.1:9999/，否则将会访问不到。启用了Https之后，所有的服务端小程序的
 响应都将会承载在https上。
+
+================
+生成CRUD代码
+================
+
+Tropic提供了生成CRUD代码的能力组件，如此一来，我们可以快速生成模板式的增删改查的代码，之后在生成后的代码基础上再做细致的业务开发，岂不是事半功倍？
+
+* 此功能需要JDK11
+
+我们来到app.js文件内容中，默认如下：
+
+.. code-block::javascript
+
+    load("nashorn:mozilla_compat.js");
+    load("./config.js");
+    load("./bin/server.js");
+    $.boot();
+
+当然，按照之前章节里介绍到的配置，我们还需要事先配置好数据库的连接信息。接着，我们在将上面的代码改成以下：
+
+.. code-block::javascript
+
+    load("nashorn:mozilla_compat.js");
+    load("./config.js");
+    load("./bin/server.js");
+    load("./bin/crud.js");
+    $.gencrud(["person"]);
+
+此时，我们的代码中调用了$.gencrud()函数，并且传入了一个数组参数，这个数组中是你预期要实现生成代码的数据表名。完成，只需要start.bat或者linux系统下
+start.sh。我们就可以在servlet目录下得到一个目录名为person的文件夹，在这个文件夹下将会产生select.js,update.js,delete.js,save.js四个文件。于此
+同时，还会在Tropic的根目录下生成一个endpoints.js的文件，这个文件中就是四个servlet小程序对应在config.endpoints的配置信息。我们只需要配置完成后，
+重新改回app.js原来的面貌，启动服务就可以正常使用了。
+
+怎么样，如果你已经迫不及待了，不妨亲自试试吧。
+
+
+
