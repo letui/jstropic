@@ -20,6 +20,7 @@
 * /bin/server.js
 * /bin/index.js
 * /bin/static.js
+* /bin/crud.js
 
 这四个文件中server.js是框架的核心，index.js是框架的默认首页响应程序脚本，等同于index.html/index.jsp之类
 dbutils.js是对数据库服务化的一种模板化能力的提炼，将数据库访问SQL能力换成另一种语法。
@@ -27,12 +28,14 @@ bind.js是整个框架的一种动态绑定能力模块，在后面的章节中�
 
 /lib目录存放我们所需要的jar包，这些jar包将在程序启动时加载至JVM中。
 /log目录是我们存放程序运行时日志的目录，所有程序产生的日志将会写入到该目录下。
-/patch目录是bing.js所提供的能力向服务器打补丁时所提交的代码所存放的目录。
+/patch目录是bind.js所提供的能力向服务器打补丁时所提交的代码所存放的目录。
 /servlet目录是我们所有开发的小程序的存放目录。
 /static 目录是我们存放静态资源的目录，例如html,js,css,图片等等。
 app.js 是程序的主启动程序，相当于main函数。
 config.js 是我们程序的集中配置文件，所有的配置信息将在这个配置文件中进行分类配置。
 start.bat和start.sh分别是对应Windows和Linux系统的启动脚本。
+stop.stop.sh分别是对应Windows和Linux系统的停止脚本。
+
 
 ========
 快速上手
