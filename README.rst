@@ -24,9 +24,19 @@ Jstropic是一套体积很小的框架，是面向数据库到浏览器的数据
 * JDK8/11
 * Tropic
 
-抢先版下载地址:
+下载地址:
 
-https://github.com/letui/Tropic/releases/download/Tropic-1.2/Tropic-1.2.zip
+https://github.com/letui/Tropic/releases/download/Tropic-1.3/Tropic-1.3.zip
+
+
+Docker
+-------
+
+docker pull letui/tropic:1.3
+
+简单模式启动镜像 docker run -d -p 8080:9999 letui/tropic:1.3
+
+映射目录模式 docker run -d -p 8080:9999 -v /home/servlet:/servlet -v /home/static:/static letui/tropic:1.3
 
 加入贡献
 ----------
@@ -58,4 +68,3 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 
-The project is licensed under the Apache License 2.0
