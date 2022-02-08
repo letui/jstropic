@@ -463,6 +463,28 @@ Servlet和Filter的另一种写法
 同样的方式即可。
 
 ==================
+安全考虑之Basic Auth
+==================
+通常浏览器都支持Basic Authentication，即在访问的时候会有个弹出窗口提示务必输入用户和密码。如下图:
+
+.. image:: auth.jpg
+
+Tropic提供了Basic Authentication功能的配置化支持，只需要在config.js中的server下添加以下配置即可。
+
+.. code-block:: javascript
+
+        basic_auth_enable:true,
+        basic_auth_user:"admin",
+        basic_auth_pass:"admin",
+
+无论如何，这种基本的认证控制都是很入门的，以上将认证的用户和密码都设置为了admin，这就代表了所有的服务路径都将经过认证后才可以被访问。在开启了
+认证后，我们在Postman中测试接口时，就要对Postman的认证功能进行设置，详情见下图:
+
+.. image:: auth_in_postman.png
+
+在进行了对应的设置后，就可以像以往一样进行测试API接口了。
+
+==================
 安全的考虑之HTTPS
 ==================
 
