@@ -288,6 +288,12 @@ setTimeout(fn,time)
 * fn 无参函数
 * time 延迟的时间，单位：毫秒
 
+.. code-block:: javascript
+
+    $.setTimeout(function(){
+        println("Hello ,i'm in 'Timeout'");
+    },2000);
+
 指定一个时间，延迟执行一个函数，和浏览器中window.setTimeout等价。
 
 setInterval(fn,time)
@@ -295,6 +301,12 @@ setInterval(fn,time)
 
 * fn 无参函数
 * time 间隔的时间，单位：毫秒
+
+.. code-block:: javascript
+
+    $.setInterval(function(){
+        println("Hello ,i'm in 'Interval'");
+    },2000);
 
 指定一个时间，以该时间为固定间隔执行一个函数，和浏览器中window.setInterval等价。
 
