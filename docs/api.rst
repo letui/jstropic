@@ -351,6 +351,7 @@ gencrud(tables,asCamel)
     load("nashorn:mozilla_compat.js");
     load("./config.js");
     load("./bin/server.js");
+    load("./bin/crud.js");
     $.gencrud(["person","city"],true);
 
 执行完毕后，即可在/servlet目录下找到对应代码，并会产生一个endpoints.js的文件，其中包含了所有的默认配置。
