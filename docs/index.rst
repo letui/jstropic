@@ -32,6 +32,8 @@ Contents:
    :caption: API REFERENCE
    :maxdepth: 3
 
+   api
+
 .. toctree::
    :caption: Others
    :maxdepth: 3
