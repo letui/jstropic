@@ -321,6 +321,28 @@ logger(name)
 
 获取一个日志对象，用于记录日志
 
+debug(str)
+---------------
+
+语法糖，等价于$.logger().debug(str);
+
+
+info(str)
+---------------
+
+语法糖，等价于$.logger().info(str);
+
+warn(str)
+---------------
+
+语法糖，等价于$.logger().warn(str);
+
+
+error(str)
+---------------
+
+语法糖，等价于$.logger().error(str);
+
 
 ==========
 秘钥证书
