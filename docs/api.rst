@@ -104,6 +104,11 @@ asMapList
 非函数，默认提供一个Apache DBUtils组件的 MapListHandler实例，负责将查询出的数据转换为一个填充了HashMap的List，Map中的Key为数据库列名
 值为数据库列的实际内容。
 
+query(sql,params)
+-----------------
+语法糖，支持执行select * from x where  a= ? and b= ? 的SQL语句，params支持按照顺序填入，调用时将按照顺序替换SQL里的问号，其返回结果是
+经过格式化的数据集合。
+
 format(mapList)
 ---------------
 
